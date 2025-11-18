@@ -1,34 +1,25 @@
 import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
   providers: [
-    Credentials({
-      name: 'Strapi',
+    CredentialsProvider({
+      name: "Strapi",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: "Password", type: 'password' }
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
-
-      async authorize(credentials) {
+      authorize: async ({ email, password }) => {
         try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/auth/local`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                identifier: credentials.email,
-                password: credentials.password
-              })
-            }
-          );
+          const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/auth/local`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ identifier: email, password }), // Strapi expects identifier
+          });
 
           const data = await res.json();
 
-          if (!res.ok || !data.jwt) {
-            throw new Error(data.error?.message || "Login failed");
-          }
+          if (!res.ok || !data.jwt) return null;
 
           return {
             id: data.user.id,
@@ -37,29 +28,32 @@ export const authOptions = {
             jwt: data.jwt,
           };
         } catch (err) {
-          throw new Error(err?.message || "Authorize failed");
+          console.error("Authorize error:", err);
+          return null;
         }
-      }
-    })
+      },
+    }),
   ],
-
   callbacks: {
     async jwt({ token, user }) {
-      if (user?.jwt) { token.jwt = user.jwt; token.id = user.id; }
+      if (user?.jwt) {
+        token.jwt = user.jwt;
+        token.id = user.id;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (token?.jwt) { session.jwt = token.jwt; session.user.id = token.id; }
+      if (token?.jwt) {
+        session.jwt = token.jwt;
+        session.user.id = token.id;
+      }
       return session;
-    }
+    },
   },
-  pages: {
-    signIn: '/login'
-  },
-  secret: process.env.NEXTAUTH_SECRET
+  pages: { signIn: "/login" },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };
 

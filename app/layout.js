@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import SessionWrapper from "@/components/SessionWrapper";
+import { Toaster } from 'react-hot-toast';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +34,8 @@ export default function RootLayout({ children }) {
             disableTransitionOnChange
           >
             {children}
+            <Toaster position="top-center"
+              reverseOrder={false} />
           </ThemeProvider>
         </SessionWrapper>
 

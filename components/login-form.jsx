@@ -1,48 +1,89 @@
 /** @format */
 
+// app/components/LoginForm.jsx
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
-export function LoginForm({ className, ...props }) {
+export function LoginForm() {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: formData.email,
+      password: formData.password,
+    });
+
+    setLoading(false);
+
+    if (res?.error) {
+      toast.error(res.error);
+    } else {
+      console.log(res);
+      toast.success("Logged in successfully");
+      router.push("/dashboard");
+    }
+  };
+
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader className='text-center'>
-          <CardTitle className='text-xl'>Welcome back</CardTitle>
-          <CardDescription>Please enter your credentials to continue</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor='email'>Email</FieldLabel>
-                <Input id='email' type='email' placeholder='m@example.com' required />
-              </Field>
-
-              <Field>
-                <div className='flex items-center'>
-                  <FieldLabel htmlFor='password'>Password</FieldLabel>
-                </div>
-                <Input id='password' type='password' required />
-              </Field>
-
-              <Field>
-                <Button type='submit'>Login</Button>
-                <FieldDescription className='text-center'>
-                  Don&apos;t have an account? <a href='#'>Sign up</a>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-      <FieldDescription className='px-6 text-center'>
-        By clicking continue, you agree to our <a href='#'>Terms of Service</a> and{" "}
-        <a href='#'>Privacy Policy</a>.
-      </FieldDescription>
-    </div>
+    <Card>
+      <CardHeader className='text-center'>
+        <CardTitle>Welcome back</CardTitle>
+        <CardDescription>Enter your credentials to continue</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleLogin}>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor='email'>Email</FieldLabel>
+              <Input
+                id='email'
+                name='email'
+                type='email'
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor='password'>Password</FieldLabel>
+              <Input
+                id='password'
+                name='password'
+                type='password'
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </Field>
+            <Field>
+              <Button type='submit' disabled={loading}>
+                {loading ? "Loading..." : "Login"}
+              </Button>
+              <FieldDescription className='text-center'>
+                &rsquo; have an account? <a href='#'>Sign up</a>
+              </FieldDescription>
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
