@@ -1,12 +1,12 @@
 /** @format */
 
-// app/components/LoginForm.jsx
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -78,7 +78,7 @@ export function LoginForm() {
                 {loading ? "Loading..." : "Login"}
               </Button>
               <FieldDescription className='text-center'>
-                &rsquo; have an account? <a href='#'>Sign up</a>
+                Dont't have an account? <Link href='register'>Sign up</Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

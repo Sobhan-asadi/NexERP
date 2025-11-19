@@ -20,7 +20,7 @@ export default function HomeHero() {
 
             <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
               <Link
-                href="/dashboard"
+                href="/login"
                 className="group inline-flex items-center gap-3 rounded-full px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-400 text-white font-semibold shadow-lg transform transition duration-200 hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-emerald-300/40"
                 aria-label="Enter Dashboard"
               >
@@ -37,26 +37,32 @@ export default function HomeHero() {
                   </svg>
                 </span>
 
-                <span>Enter Dashboard</span>
+                <span>Login</span>
               </Link>
 
+              <Link
+                href="/register"
+                className="group inline-flex items-center gap-3 rounded-full px-6 py-3 hover:bg-gradient-to-r border border-emerald-500 transition-all from-emerald-500 to-green-400 text-white font-semibold shadow-lg  duration-200 hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-emerald-300/40"
+                aria-label="Enter Dashboard"
+              >
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/20 group-hover:bg-white/30 transition-all">
 
+                  <svg
+                    className="w-4 h-4 transform transition-transform duration-200 group-hover:translate-x-1"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M5 10h9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M11 6l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+
+                <span>Register</span>
+              </Link>
             </div>
           </div>
 
-          <aside className="hidden md:block w-72">
-            <div className="rounded-xl bg-zinc-50 dark:bg-zinc-800 p-4 border border-black/[0.03] dark:border-white/[0.03]">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs font-medium text-zinc-500 dark:text-zinc-300">Today Sales</div>
-                  <div className="mt-1 text-2xl font-semibold text-black dark:text-zinc-50">₺4,820</div>
-                </div>
-                <div className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold">+8.2%</div>
-              </div>
-
-              <div className="mt-4 h-16 rounded-md bg-gradient-to-r from-emerald-100 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-800/20" />
-            </div>
-          </aside>
         </div>
       </main>
     </div>
